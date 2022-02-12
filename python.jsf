@@ -1,0 +1,371 @@
+# JOE syntax highlight file for Python
+
+=Idle		bold white
+=Comment 	white
+=String		bold green # selbst angelegt, war vorher auch eine Constant
+=Docstring	green
+=DocstringLabel	bold green
+=DocEscape	bold green
+=Constant 	cyan
+=Escape 	bold yellow
+=Keyword 	yellow
+=Builtin	bold magenta
+=Bad		bold red
+=Brace		magenta
+
+=PrivateMember	yellow #fg_310 # brown
+=Decorator	bold yellow
+=Declaration	bold yellow #bold blue
+
+:idle Idle
+	*		idle
+	"#"		comment		recolor=-1
+	"0-9"		first_digit	recolor=-1
+	"'\""		string_quot_1	recolor=-1 save_c
+	"a-zA-Z_"	ident		noeat
+	"{}"		brace		recolor=-1
+	"@"		decorator	recolor=-1
+	","		kw		recolor=-1
+
+:brace Brace
+	*		idle		noeat
+
+# annotations
+:decorator Decorator
+	*		decorator
+	" (\t\r\n"	idle		noeat
+
+:comment Comment
+	*		comment
+	# might be TODO label
+	#"BFHNTX"	comment		noeat call=comment_todo.comment_todo()
+	"\n"		idle
+
+:first_digit Constant
+	*		idle		noeat
+	"xX"		hex
+	"."		float
+	"eE"		epart
+	"0-9"		first_number
+
+:hex Constant
+	*		idle		noeat
+	"0-9A-Fa-f"	hex
+
+:first_number Constant
+	*		idle		noeat
+	"0-9"		first_number
+	"."		float
+
+:maybe_float Constant
+	*		idle		recolor=-2	noeat
+	"0-9"		float		recolor=-2
+
+:float Constant
+	*		idle		noeat
+	"eE"		epart
+	"0-9"		float
+
+:epart Constant
+	*		idle		noeat
+	"0-9+\-"	enum
+
+:enum Constant
+	*		idle		noeat
+	"0-9"		enum
+
+:ident Idle
+	*		ident1		noeat buffer
+	"_"		priv_member	recolor=-1
+
+:ident1 Idle
+	*		idle		noeat strings
+	"and"		kw
+	"as"		kw
+	"assert"	kw
+	"break"		kw
+	"class"		declkw
+	"continue"	kw
+	"def"		declkw
+	"del"		kw
+	"elif"		kw
+	"else"		kw
+	"except"	kw
+	"exec"		kw
+	"finally"	kw
+	"for"		kw
+	"from"		kw
+	"global"	kw
+	"if"		kw
+	"import"	kw
+	"in"		kw
+	"is"		kw
+	"lambda"	kw
+	"nonlocal"	kw
+	"not"		kw
+	"or"		kw
+	"pass"		kw
+	#"print"		kw
+	"raise"		kw
+	"return"	kw
+	"try"		kw
+	"while"		kw
+	"with"		kw
+	"yield"		kw
+	","		kw	
+
+	# quasi-keywords
+	"False"		lit
+	"None"		lit
+	"True"		lit
+	# builtin-funktionen
+
+	"abs"			bi
+	"delattr"		bi
+	"hash"			bi
+	"memoryview"		bi
+	"set"			bi
+	"all"			bi
+	"dict"			bi
+	"help"			bi
+	"min"			bi
+	"setattr"		bi
+	"any"			bi
+	"dir"			bi
+	"hex"			bi
+	"next"			bi
+	"slice"			bi
+	"ascii"			bi
+	"divmod"		bi
+	"id"			bi
+	"object"		bi
+	"sorted"		bi
+	"bin"			bi
+	"enumerate"		bi
+	"input"			bi
+	"oct"			bi
+	"staticmethod"		bi
+	"bool"			bi
+	"eval"			bi
+	"int"			bi
+	"open"			bi
+	"str"			bi
+	"breakpoint"		bi
+	"exec"			bi
+	"isinstance"		bi
+	"ord"			bi
+	"sum"			bi
+	"bytearray"		bi
+	"filter"		bi
+	"issubclass"		bi
+	"pow"			bi
+	"super"			bi
+	"bytes"			bi
+	"float"			bi
+	"iter"			bi
+	"print"			bi
+	"tuple"			bi
+	"callable"		bi
+	"format"		bi
+	"len"			bi
+	"property"		bi
+	"type"			bi
+	"chr"			bi
+	"frozenset"		bi
+	"list"			bi
+	"range"			bi
+	"vars"			bi
+	"classmethod"		bi
+	"getattr"		bi
+	"locals"		bi
+	"repr"			bi
+	"zip"			bi
+	"compile"		bi
+	"globals"		bi
+	"map"			bi
+	"reversed"		bi
+	"__import__"		bi
+	"complex"		bi
+	"hasattr"		bi
+	"max"			bi
+	"round"			bi
+done
+	"'\""		idle 		noeat istrings
+	"u"		string_pre
+	"b"		string_pre
+	"r"		string_raw_pre
+	"br"		string_raw_pre
+	"rb"		string_raw_pre
+done
+	"a-zA-Z0-9_"	ident1
+
+:bi Builtin
+	*		idle		noeat
+
+:kw Keyword
+	*		idle		noeat
+
+:lit Keyword
+	*		idle		noeat
+
+:declkw Keyword
+	*		idle 		noeat recolor=-1
+	"a-zA-Z"	declkw
+	" \t"		declname_1
+
+:declname_1 Declaration
+	*		declname
+	"_"		priv_member	recolor=-1
+
+:declname Declaration
+	*		idle		noeat recolor=-1
+	"a-zA-Z0-9_"	declname
+
+:priv_member PrivateMember
+	*		idle		noeat
+	"a-zA-Z0-9_"	priv_member
+
+# Handle string prefixes up to the string itself. Alles was hier jetzt String ist war vorher Constant
+:string_pre String
+	*		idle noeat
+	"'\""		string_quot_1 	save_c
+
+:string_raw_pre String
+	*		idle noeat
+	"'\""		string_quot_raw_1 save_c
+
+# Differentiate between docstrings and regular strings, carrying with it raw state
+:string_quot_1 String
+	*		idle call=.string() noeat
+	&		string_quot_2
+
+:string_quot_2 String
+	*		idle noeat
+	&		idle call=.string(docstring) recolor=-3
+
+:string_quot_raw_1 String
+	*		idle call=.string(raw)
+	&		string_quot_raw_2
+
+:string_quot_raw_2 String
+	*		idle noeat
+	&		idle call=.string(docstring raw) recolor=-3
+
+.subr string
+
+.ifdef docstring	# Long strings
+:string Docstring
+	*		string
+	"BFHNTX"	string		noeat call=.comment_todo_docstr()
+.ifdef raw
+.else
+	"\\"		string_esc	mark
+.endif
+	&		doc_end_1
+
+:doc_end_1 Docstring
+	*		string noeat
+	&		doc_end_2
+
+:doc_end_2 Docstring
+	*		string noeat
+	&		string return
+
+.else			# Short strings
+
+:string String
+	*		string
+	"\n"		string return
+.ifdef raw
+.else
+	"\\"		string_esc mark
+.endif
+	&		string return
+
+.endif
+
+:string_esc String
+	*		string_esc_done
+	"x"		string_hex2
+	"u"		string_hex4
+	"U"		string_hex8
+	"0-7"		string_octal2
+	"\n"		string_esc_done
+
+# Recolor whole escape sequence based on whether this is a docstring.
+:string_esc_done String
+	*		string_esc_really_done noeat markend recolormark
+
+.ifdef docstring
+:string_esc_really_done DocEscape
+	*		string 		noeat
+.else
+:string_esc_really_done Escape
+	*		string 		noeat
+.endif
+
+:string_hex1 Escape
+	*		string_esc_done	noeat
+	"0-9a-fA-F"	string_esc_done
+
+:string_hex2 Escape
+	*		string_esc_done	noeat
+	"0-9a-fA-F"	string_hex1
+
+:string_hex3 Escape
+	*		string_esc_done	noeat
+	"0-9a-fA-F"	string_hex2
+
+:string_hex4 Escape
+	*		string_esc_done	noeat
+	"0-9a-fA-F"	string_hex3
+
+:string_hex5 Escape
+	*		string_esc_done	noeat
+	"0-9a-fA-F"	string_hex4
+
+:string_hex6 Escape
+	*		string_esc_done	noeat
+	"0-9a-fA-F"	string_hex5
+
+:string_hex7 Escape
+	*		string_esc_done	noeat
+	"0-9a-fA-F"	string_hex6
+
+:string_hex8 Escape
+	*		string_esc_done	noeat
+	"0-9a-fA-F"	string_hex7
+
+:string_octal1 Escape
+	*		string_esc_done	noeat
+	"0-7"		string_esc_done
+
+:string_octal2 Escape
+	*		string_esc_done	noeat
+	"0-7"		string_octal1
+
+.end
+
+.subr comment_todo_docstr
+# initial state
+:comment_todo_init Docstring
+	*		comment_todo_guess	buffer
+
+# highlight common TODO labels
+:comment_todo_guess Docstring
+	*		comment_todo_unknown	noeat strings
+	"BUG"		comment_todo
+	"FIXME"		comment_todo
+	"HACK"		comment_todo
+	"NOTE"		comment_todo
+	"TODO"		comment_todo
+	"XXX"		comment_todo
+done
+	"A-Z"		comment_todo_guess
+
+:comment_todo_unknown Docstring
+	*		NULL		noeat return
+
+:comment_todo DocstringLabel
+	*		NULL		noeat return
+.end
